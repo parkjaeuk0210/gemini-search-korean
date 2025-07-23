@@ -26,7 +26,9 @@
       "dest": "/dist/public/$1"
     }
   ],
-  "env": {
-    "GOOGLE_API_KEY": "@google_api_key"
+  "functions": {
+    "server/index.ts": {
+      "maxDuration": 30
+    }
   }
 }
