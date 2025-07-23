@@ -57,10 +57,10 @@ export function Search() {
       }]);
       
       try {
-        const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
+        const response = await fetch(`/api/chat?q=${encodeURIComponent(searchQuery)}`);
         if (!response.ok) throw new Error('Search failed');
         const result = await response.json();
-        console.log('Search API Response:', JSON.stringify(result, null, 2));
+        console.log('Chat API Response (New Search):', JSON.stringify(result, null, 2));
         
         if (result.sessionId) {
           setSessionId(result.sessionId);
@@ -108,11 +108,16 @@ export function Search() {
       }]);
       
       try {
+        let response;
+        let result;
+        
         if (!sessionId) {
-          const response = await fetch(`/api/search?q=${encodeURIComponent(followUpQuery)}`);
+          // 세션이 없으면 새로운 검색으로 처리
+          response = await fetch(`/api/chat?q=${encodeURIComponent(followUpQuery)}`);
           if (!response.ok) throw new Error('Search failed');
-          const result = await response.json();
-          console.log('New Search API Response:', JSON.stringify(result, null, 2));
+          result = await response.json();
+          console.log('Chat API Response (New Search from Follow-up):', JSON.stringify(result, null, 2));
+          
           if (result.sessionId) {
             setSessionId(result.sessionId);
           }
@@ -123,52 +128,35 @@ export function Search() {
               ? { ...item, results: result, isLoading: false, type: 'original' }
               : item
           ));
+        } else {
+          // 세션이 있으면 후속 질문으로 처리
+          response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              sessionId,
+              query: followUpQuery,
+            }),
+          });
           
-          return result;
-        }
-
-        const response = await fetch('/api/follow-up', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            sessionId,
-            query: followUpQuery,
-          }),
-        });
-        
-        if (!response.ok) {
-          if (response.status === 404) {
-            const newResponse = await fetch(`/api/search?q=${encodeURIComponent(followUpQuery)}`);
-            if (!newResponse.ok) throw new Error('Search failed');
-            const result = await newResponse.json();
-            console.log('Fallback Search API Response:', JSON.stringify(result, null, 2));
-            if (result.sessionId) {
-              setSessionId(result.sessionId);
-            }
-            
-            // 로딩 상태 업데이트
-            setConversationHistory(prev => prev.map(item => 
-              item.id === newItemId 
-                ? { ...item, results: result, isLoading: false, type: 'original' }
-                : item
-            ));
-            
-            return result;
+          if (!response.ok) throw new Error('Follow-up failed');
+          result = await response.json();
+          console.log('Chat API Response (Follow-up):', JSON.stringify(result, null, 2));
+          
+          // 새로운 세션 ID가 반환될 수 있음 (세션 만료로 인한 새 검색인 경우)
+          if (result.sessionId) {
+            setSessionId(result.sessionId);
           }
-          throw new Error('Follow-up failed');
+          
+          // 로딩 상태 업데이트
+          setConversationHistory(prev => prev.map(item => 
+            item.id === newItemId 
+              ? { ...item, results: result, isLoading: false }
+              : item
+          ));
         }
-        
-        const result = await response.json();
-        console.log('Follow-up API Response:', JSON.stringify(result, null, 2));
-        
-        // 로딩 상태 업데이트
-        setConversationHistory(prev => prev.map(item => 
-          item.id === newItemId 
-            ? { ...item, results: result, isLoading: false }
-            : item
-        ));
         
         return result;
       } catch (error) {
