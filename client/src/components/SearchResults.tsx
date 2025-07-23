@@ -28,17 +28,18 @@ export function SearchResults({
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (results && contentRef.current) {
+    // 추가 질문이 아닌 경우에만 스크롤
+    if (results && contentRef.current && !isFollowUp) {
       contentRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [results]);
+  }, [results, isFollowUp]);
 
   if (error) {
     return (
       <Alert variant="destructive" className="animate-in fade-in-50">
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          {error.message || 'An error occurred while searching. Please try again.'}
+          {error.message || '검색 중 오류가 발생했습니다. 다시 시도해주세요.'}
         </AlertDescription>
       </Alert>
     );
@@ -47,18 +48,21 @@ export function SearchResults({
   if (isLoading) {
     return (
       <div className="space-y-4 animate-in fade-in-50">
-        <div className="flex justify-center mb-8">
-          <Logo animate className="w-12 h-12" />
+        {/* Loading Header */}
+        <div className="flex items-center gap-3">
+          <div className="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full"></div>
+          <h2 className="text-lg font-medium text-foreground">"{query}" 검색 중...</h2>
         </div>
-        <Card className="p-6">
+        
+        <div className="glass-sierra rounded-xl p-6">
           <Skeleton className="h-4 w-3/4 mb-4" />
           <Skeleton className="h-4 w-full mb-2" />
           <Skeleton className="h-4 w-full mb-2" />
           <Skeleton className="h-4 w-2/3" />
-        </Card>
+        </div>
         <div className="space-y-2">
-          <Skeleton className="h-[100px] w-full" />
-          <Skeleton className="h-[100px] w-full" />
+          <Skeleton className="h-[80px] w-full" />
+          <Skeleton className="h-[80px] w-full" />
         </div>
       </div>
     );
@@ -67,7 +71,13 @@ export function SearchResults({
   if (!results) return null;
 
   return (
-    <div ref={contentRef} className="space-y-6 animate-in fade-in-50">
+    <motion.div 
+      ref={contentRef} 
+      className="space-y-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       {/* Search Query Display */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -77,14 +87,14 @@ export function SearchResults({
         {isFollowUp && originalQuery && (
           <>
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 text-xs sm:text-sm text-muted-foreground/70">
-              <span>Original search:</span>
+              <span>원래 검색:</span>
               <span className="font-medium">"{originalQuery}"</span>
             </div>
             <div className="h-px bg-border w-full" />
           </>
         )}
         <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 text-sm sm:text-base text-muted-foreground">
-          <span>{isFollowUp ? 'Follow-up question:' : ''}</span>
+          <span>{isFollowUp ? '추가 질문:' : ''}</span>
           <h1 className="font-serif text-lg sm:text-3xl text-foreground">"{query}"</h1>
         </div>
       </motion.div>
@@ -101,7 +111,7 @@ export function SearchResults({
       )}
 
       {/* Main Content */}
-      <Card className="overflow-hidden shadow-md">
+      <div className="glass-sierra rounded-xl overflow-hidden">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -126,7 +136,7 @@ export function SearchResults({
             }}
           />
         </motion.div>
-      </Card>
-    </div>
+      </div>
+    </motion.div>
   );
 }

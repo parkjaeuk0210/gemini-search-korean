@@ -22,12 +22,12 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      className="fixed top-4 right-4"
+      className="glass-sierra hover:bg-primary/20 text-primary dark:text-primary border-border/30"
     >
       {theme === "light" ? (
-        <Moon className="h-5 w-5" />
+        <Moon className="h-5 w-5 transition-transform hover:rotate-12" />
       ) : (
-        <Sun className="h-5 w-5" />
+        <Sun className="h-5 w-5 transition-transform hover:rotate-12" />
       )}
     </Button>
   );

@@ -61,6 +61,32 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Sierra Blue Color Palette
+        sierra: {
+          50: "#f0f8ff",
+          100: "#e5f1ff", 
+          200: "#d1e7ff",
+          300: "#a7c6ff",
+          400: "#5f8afa",
+          500: "#4a69bd",
+          600: "#3c5aa6",
+          700: "#2f4788",
+          800: "#243a6e",
+          900: "#1d3159",
+        },
+        // Blue variants for compatibility
+        blue: {
+          50: "#f0f8ff",
+          100: "#e5f1ff", 
+          200: "#d1e7ff",
+          300: "#a7c6ff",
+          400: "#5f8afa",
+          500: "#4a69bd",
+          600: "#3c5aa6",
+          700: "#2f4788",
+          800: "#243a6e",
+          900: "#1d3159",
+        },
       },
       keyframes: {
         "accordion-down": {
@@ -83,6 +109,10 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in": "fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+        "slide-up": "slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+        "shimmer": "shimmer 2s infinite",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
       },
     },
   },

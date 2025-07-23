@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'wouter';
 import { Search } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Logo } from '@/components/Logo';
 
@@ -16,52 +17,81 @@ export function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background">
-      <ThemeToggle />
-      <div className="w-full max-w-3xl px-4 animate-fade-in">
-        <div className="flex flex-col items-center mb-8">
-          <Logo className="mb-6" />
-          <h1 className="text-2xl lg:text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-200">
-            What do you want to know?
-          </h1>
-        </div>
-        
-        <form onSubmit={handleSearch} className="w-full">
-          <div className="relative group">
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Ask anything..."
-              className="w-full px-6 py-4 text-lg rounded-full border border-gray-200 
-                       focus:border-google-blue focus:ring-4 focus:ring-google-blue/20 outline-none 
-                       transition-all duration-300 shadow-sm 
-                       group-hover:shadow-lg group-hover:border-gray-300
-                       dark:bg-gray-800 dark:border-gray-700 dark:text-white
-                       dark:focus:border-google-blue dark:group-hover:border-gray-600
-                       pr-14 truncate"
-              style={{ fontFamily: 'Inter, sans-serif' }}
-              autoFocus
-            />
-            <button 
-              type="submit"
-              disabled={!query.trim()}
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full
-                         hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 
-                         hover:scale-110 active:scale-95 disabled:opacity-50 disabled:hover:scale-100
-                         disabled:hover:bg-transparent z-10 bg-background dark:bg-gray-800"
-            >
-              <Search className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-            </button>
-          </div>
-        </form>
-
-        <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400 animate-fade-in space-y-1">
-          <div>Powered by Gemini 2.0</div>
-          <div>
-            Created by <a href="http://x.com/ammaar" target="_blank" rel="noopener noreferrer" className="hover:text-gray-800 dark:hover:text-gray-300 transition-colors">@ammaar</a>
-          </div>
-        </div>
+    <div className="min-h-screen bg-sierra-gradient dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 relative overflow-hidden">
+      {/* Theme Toggle */}
+      <div className="absolute top-6 right-6 z-10">
+        <ThemeToggle />
+      </div>
+      
+      {/* Main Content */}
+      <div className="flex flex-col items-center justify-center min-h-screen px-4">
+        <motion.div 
+          className="w-full max-w-4xl mx-auto text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {/* Logo Section */}
+          <motion.div 
+            className="flex justify-center mb-12"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Logo className="mb-0" />
+          </motion.div>
+          
+          {/* Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-12"
+          >
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+              검색하세요
+            </h1>
+          </motion.div>
+          
+          
+          {/* Search Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <form onSubmit={handleSearch} className="w-full max-w-xl mx-auto">
+              <div className="relative glass-sierra rounded-2xl p-2">
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="검색어를 입력하세요"
+                  className="w-full px-6 py-4 text-lg bg-transparent border-0 rounded-xl
+                           placeholder:text-muted-foreground/60 text-foreground
+                           focus:outline-none focus:ring-0
+                           transition-all duration-300"
+                  autoFocus
+                />
+                <motion.button 
+                  type="submit"
+                  disabled={!query.trim()}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-3 rounded-xl
+                           bg-primary text-primary-foreground shadow-md
+                           hover:bg-primary/90 hover:shadow-lg 
+                           transition-all duration-300 
+                           disabled:opacity-50 disabled:cursor-not-allowed
+                           group/btn"
+                  whileHover={!query.trim() ? {} : { scale: 1.02 }}
+                  whileTap={!query.trim() ? {} : { scale: 0.98 }}
+                >
+                  <Search className="w-5 h-5" />
+                </motion.button>
+              </div>
+            </form>
+          </motion.div>
+          
+        </motion.div>
       </div>
     </div>
   );
