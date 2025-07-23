@@ -41,17 +41,6 @@ export function Home() {
             <Logo className="mb-0" />
           </motion.div>
           
-          {/* Title */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-12"
-          >
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-              검색하세요
-            </h1>
-          </motion.div>
           
           
           {/* Search Section */}
