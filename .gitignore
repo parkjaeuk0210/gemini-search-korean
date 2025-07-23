@@ -44,3 +44,4 @@ yarn-error.log*
 # Temporary
 .tmp/
 temp/
+.vercel
